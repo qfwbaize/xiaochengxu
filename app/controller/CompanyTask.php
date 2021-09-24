@@ -6,6 +6,7 @@ namespace app\controller;
 use app\common\controller\AdminController;
 use app\model\Business;
 use app\model\Company;
+use app\model\Cooperation;
 use app\model\TaskContent;
 use app\model\TaskPeople;
 use app\model\TaskReceive;
@@ -239,7 +240,38 @@ class CompanyTask extends AdminController
         $save ? $this->success('操作成功') : $this->error('操作失败');
 
     }
+    /**
+     * 查看合作得机构
+     *
+     * @return \think\Response
+     */
+    public function company(){
+    $company=new Company();
+        $company_per=new Cooperation();
+    $company_id=$this->AdminId();
+        $company_launch=$company_per->whereOr('launch_id',$company_id)->whereOr('receive_id',$company_id) ->field('launch_id')
+            ->buildSql(true);
+        $company_receive=$company_per->whereOr('launch_id',$company_id)->whereOr('receive_id',$company_id) ->field('receive_id')
+            ->buildSql(true);
+        $list_id= $company
+            ->distinct(true)
+            ->whereor("company_id IN {$company_launch}")
+            ->whereor("company_id IN {$company_receive}")
+            ->select();
+        $list=[];
 
+        foreach ($list_id as $v){
+            if($v['company_id']!=$company_id){
+
+                $list[]=['company_id'=>$v['company_id'],'company_name'=>$v['company_name'],'company_logo'=>$v['company_logo']];
+            }
+        }
+        $data = ['code' => 200, 'msg' => '成功', 'data' => $list,];
+        return json($data);
+
+
+
+    }
     /**
      * 机构任务发布.
      *
