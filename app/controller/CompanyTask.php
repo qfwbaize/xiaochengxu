@@ -69,7 +69,7 @@ class CompanyTask extends AdminController
             }
             $task_content=$content->where('task_id',$vo['id'])->field('money')->find();
             if (!empty($task_content)) {
-                $vo['money'] = date('Y-m-d', $vo['money']);}
+                $vo['money'] = $task_content['money'];}
             if ($vo['pid'] == 0) {
                 $children = [];
                 foreach ($pid as $v) {
@@ -143,7 +143,7 @@ class CompanyTask extends AdminController
         foreach ($list as $vo) {
             $task_content=$content->where('task_id',$vo['id'])->field('money')->find();
             if (!empty($task_content)) {
-            $vo['money'] = date('Y-m-d', $vo['money']);}
+                $vo['money'] = $task_content['money'];}
             $business_name = $business->where('card_id', $vo['card_id'])->find();
             if (!empty($business_name)) {
                 $vo['name'] = $business_name['name'];
