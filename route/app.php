@@ -27,6 +27,10 @@ Route::group('apis', function () {
 
     Route::get('messages/read', 'Messages/read'); //阅读消息
     Route::delete('messages/del', 'Messages/delete'); //角色删除
+    Route::post('companytask/add', 'CompanyTask/create'); //发布任务
+    Route::get('companytask/release_index', 'CompanyTask/release_index'); //查看发出任务
+    Route::get('companytask/accept_index', 'CompanyTask/accept_index'); //查看接受任务
+
     
 
 })->ext();

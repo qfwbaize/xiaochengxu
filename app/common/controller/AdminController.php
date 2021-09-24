@@ -151,7 +151,7 @@ class AdminController extends BaseController
          $get = request()->get('', null, null);
         
         $page = isset($get['page']) && !empty($get['page']) ? $get['page'] : "1";
-        $limit = isset($get['limit']) && !empty($get['limit']) ? $get['limit'] : "14";
+        $limit = isset($get['limit']) && !empty($get['limit']) ? $get['limit'] : "10";
         $page=intval($page);
         $limit=intval($limit);
         $filters = isset($get['filter']) && !empty($get['filter']) ? $get['filter'] : '{}';
