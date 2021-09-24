@@ -255,6 +255,7 @@ class CompanyTask extends AdminController
             ->buildSql(true);
         $list_id= $company
             ->distinct(true)
+            ->where('status','=','1')
             ->whereor("company_id IN {$company_launch}")
             ->whereor("company_id IN {$company_receive}")
             ->select();
