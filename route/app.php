@@ -30,6 +30,8 @@ Route::group('apis', function () {
     Route::post('companytask/add', 'CompanyTask/create'); //发布任务
     Route::get('companytask/release_index', 'CompanyTask/release_index'); //查看发出任务
     Route::get('companytask/accept_index', 'CompanyTask/accept_index'); //查看接受任务
+    Route::put('companytask/task_update', 'CompanyTask/task_update'); //修改任务状态
+
 
     
 
