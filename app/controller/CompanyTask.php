@@ -54,28 +54,32 @@ class CompanyTask extends AdminController
             ->select();
         $newNodeList = [];
         $company = new Company();
-        $business= new Business();
-        foreach ($list as $vo) {
-            $business_name=$business->where('card_id',$vo['card_id'])->find();
-            if(!empty($business_name)){
-                $vo['name']=$business_name['name'];
-            }
-            $company_name=$company->where('company_id',$vo['company_id'])->find();
-            if(!empty($company_name)){
-                $vo['company_name']=$company_name['company_name'];
-            }
+        $business = new Business();
+        $content= new TaskContent();
 
+        foreach ($list as $vo) {
+            $business_name = $business->where('card_id', $vo['card_id'])->find();
+            if (!empty($business_name)) {
+                $vo['name'] = $business_name['name'];
+            }
+            $company_name = $company->where('company_id', $vo['company_id'])->find();
+            if (!empty($company_name)) {
+                $vo['company_name'] = $company_name['company_name'];
+            }
+            $task_content=$content->where('task_id',$vo['id'])->field('money')->find();
+            if (!empty($task_content)) {
+                $vo['money'] = date('Y-m-d', $vo['money']);}
             if ($vo['pid'] == 0) {
                 $children = [];
                 foreach ($pid as $v) {
                     if ($v['pid'] == $vo['id']) {
-                        $business_task_name=$business->where('card_id',$v['card_id'])->find();
-                        if(!empty($business_task_name)){
-                            $v['name']=$business_task_name['name'];
+                        $business_task_name = $business->where('card_id', $v['card_id'])->find();
+                        if (!empty($business_task_name)) {
+                            $v['name'] = $business_task_name['name'];
                         }
-                        $company_task_name=$company->where('company_id',$v['company_id'])->find();
-                        if(!empty($company_name)){
-                            $v['company_name']=$company_task_name['company_name'];
+                        $company_task_name = $company->where('company_id', $v['company_id'])->find();
+                        if (!empty($company_name)) {
+                            $v['company_name'] = $company_task_name['company_name'];
                         }
                         $v['start_time'] = date('Y-m-d', $v['start_time']);
                         $v['end_time'] = date('Y-m-d', $v['end_time']);
@@ -100,12 +104,13 @@ class CompanyTask extends AdminController
         return json($data);
 
     }
-   /**
- * 查看接受的任务
- *
- * @return \think\Response
- */
-   public function accept_index()
+
+    /**
+     * 查看接受的任务
+     *
+     * @return \think\Response
+     */
+    public function accept_index()
     {
         $revice = new TaskReceive();
         $company_id = $this->AdminId();
@@ -130,29 +135,33 @@ class CompanyTask extends AdminController
             ->order($this->sort)
             ->where($where)
             ->select();
-        $newNodeList=[];
+        $newNodeList = [];
         $company = new Company();
-        $business= new Business();
+        $business = new Business();
+        $content=new TaskContent();
         foreach ($list as $vo) {
-            $business_name=$business->where('card_id',$vo['card_id'])->find();
-            if(!empty($business_name)){
-                $vo['name']=$business_name['name'];
+            $task_content=$content->where('task_id',$vo['id'])->field('money')->find();
+            if (!empty($task_content)) {
+            $vo['money'] = date('Y-m-d', $vo['money']);}
+            $business_name = $business->where('card_id', $vo['card_id'])->find();
+            if (!empty($business_name)) {
+                $vo['name'] = $business_name['name'];
             }
-            $company_name=$company->where('company_id',$vo['company_id'])->find();
-            if(!empty($company_name)){
-                $vo['company_name']=$company_name['company_name'];
+            $company_name = $company->where('company_id', $vo['company_id'])->find();
+            if (!empty($company_name)) {
+                $vo['company_name'] = $company_name['company_name'];
             }
             if ($vo['pid'] == 0) {
                 $children = [];
                 foreach ($pid as $v) {
                     if ($v['pid'] == $vo['id']) {
-                        $business_task_name=$business->where('card_id',$v['card_id'])->find();
-                        if(!empty($business_task_name)){
-                            $v['name']=$business_task_name['name'];
+                        $business_task_name = $business->where('card_id', $v['card_id'])->find();
+                        if (!empty($business_task_name)) {
+                            $v['name'] = $business_task_name['name'];
                         }
-                        $company_task_name=$company->where('company_id',$v['company_id'])->find();
-                        if(!empty($company_name)){
-                            $v['company_name']=$company_task_name['company_name'];
+                        $company_task_name = $company->where('company_id', $v['company_id'])->find();
+                        if (!empty($company_name)) {
+                            $v['company_name'] = $company_task_name['company_name'];
                         }
                         $v['start_time'] = date('Y-m-d', $v['start_time']);
                         $v['end_time'] = date('Y-m-d', $v['end_time']);
@@ -174,18 +183,52 @@ class CompanyTask extends AdminController
         ];
         return json($data);
     }
+
+    /**
+     * 查看任务详情
+     *
+     * @return \think\Response
+     */
+    public function read($id)
+    {
+        $row = $this->model->find($id);
+        empty($row) && $this->error('数据不存在');
+        $content = new TaskContent();
+        $company= new Company();
+        $task_content = $content->where('task_id', $row['id'])->find();
+        empty($task_content) && $this->error('任务详情丢失');
+        $company = new Company();
+        $company_task_name = $company->where('company_id', $row['company_id'])->find();
+        if (!empty($company_task_name)) {
+            $row['company_name'] = $company_task_name['company_name'];
+        }
+        $row['content'] = $task_content['content'];
+        $row['num'] = $task_content['num'];
+        $row['pro_id']=$task_content['pro_id'];
+        $row['contract']=$task_content['contract'];
+        $row['money']=$task_content['money'];
+        $row['reward']=$task_content['reward'];
+        $row['explain']=$task_content['explain'];
+        $row['start_time'] = date('Y-m-d', $row['start_time']);
+        $row['end_time'] = date('Y-m-d', $row['end_time']);
+        $data = ['code' => 200, 'msg' => '成功', 'data' => $row,];
+        return json($data);
+
+    }
+
     /**
      * 修改任务状态
      *
      * @return \think\Response
      */
-    public function task_update($id){
+    public function task_update($id)
+    {
         $row = $this->model->find($id);
         empty($row) && $this->error('数据不存在');
 
         $post = $this->request->post();
         $rule = [
-            'status'=>'in:1,2,3,4'
+            'status' => 'in:1,2,3,4'
         ];
         $this->validate($post, $rule);
         try {
@@ -230,7 +273,7 @@ class CompanyTask extends AdminController
                 'pattern' => $post['pattern'],
                 'company_id' => $post['company_id'],
                 'title' => $post['title'],
-                'card_id'=>$this->CardId(),
+                'card_id' => $this->CardId(),
                 'status' => 0,
                 'start_time' => strtotime($post['start_time']),
                 'end_time' => strtotime($post['end_time']),
@@ -246,8 +289,8 @@ class CompanyTask extends AdminController
                 'pro_id' => $post['pro_id'],
                 'contract' => $post['contract'],
                 'money' => $post['money'],
-                'reward'=>$post['reward'],
-                'explain'=>$post['explain']
+                'reward' => $post['reward'],
+                'explain' => $post['explain']
 
             ];
             $content->save($taskcontent);
