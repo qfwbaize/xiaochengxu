@@ -213,6 +213,7 @@ class CompanyTask extends AdminController
         foreach ($list as $value){
             $card_name=$business->where('card_id',$value['card_id'])->find();
             $value['name']=$card_name['name'];
+            $value['logo']=$card_name['logo'];
         }
         $data = [
             'code' => 200,
@@ -268,6 +269,7 @@ class CompanyTask extends AdminController
         foreach ($list as $value){
             $card_name=$business->where('card_id',$value['card_id'])->find();
             $value['name']=$card_name['name'];
+            $value['logo']=$card_name['logo'];
         }
         $data = [
             'code' => 200,
