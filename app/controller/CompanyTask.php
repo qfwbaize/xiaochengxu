@@ -291,13 +291,16 @@ class CompanyTask extends AdminController
         empty($row) && $this->error('数据不存在');
         $content = new TaskContent();
         $company = new Company();
+        $business=new Business();
         $task_content = $content->where('task_id', $row['id'])->find();
         empty($task_content) && $this->error('任务详情丢失');
-        $company = new Company();
+        $business_name=$business->where('card_id',$row['card_id'])->find();
         $company_task_name = $company->where('company_id', $row['company_id'])->find();
         if (!empty($company_task_name)) {
             $row['company_name'] = $company_task_name['company_name'];
         }
+        $row['name'] = $business_name['name'];
+        $row['logo'] = $business_name['logo'];
         $row['content'] = $task_content['content'];
         $row['num'] = $task_content['num'];
         $row['pro_id'] = $task_content['pro_id'];
