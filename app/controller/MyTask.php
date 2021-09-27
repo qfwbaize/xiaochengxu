@@ -62,6 +62,9 @@ class MyTask extends AdminController
             if (!empty($task_content)) {
                 $value['money'] = $task_content['money'];
             }
+            if($value['type']==1){
+                $value['is_show']='false';
+            }
             $people=$task_people->where('task_id',$value['id'])->where('card_id',$card_id)->find();
             if(empty($people)){
                $nodelist[]=$value;
@@ -114,6 +117,9 @@ class MyTask extends AdminController
             $company_name = $company->where('company_id', $value['company_id'])->find();
             if (!empty($company_name)) {
                 $value['company_name'] = $company_name['company_name'];
+            }
+            if($value['type']==1){
+                $value['is_show']='false';
             }
             $task_content = $content->where('task_id', $value['id'])->field('money')->find();
             if (!empty($task_content)) {
