@@ -36,8 +36,9 @@ Route::group('apis', function () {
     Route::get('companytask/task_people', 'CompanyTask/task_people'); //查看正在工作得员工
     Route::get('companytask/task_people_evidence', 'CompanyTask/task_people_evidence'); //查看员工得证据
     Route::put('companytask/task_people_edit', 'CompanyTask/task_people_edit'); //对员工工作进行审批
+    Route::get('mytask/missed', 'Mytask/index'); //查看我的未接任务
+    Route::get('mytask/received', 'Mytask/received'); //查看我的未接任务
 
-    
 
 })->ext();
     //->middleware(['priority', 'verification']);

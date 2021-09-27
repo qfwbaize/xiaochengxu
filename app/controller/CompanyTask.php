@@ -390,9 +390,7 @@ class CompanyTask extends AdminController
             'type' => 'require',
             'pattern' => 'require',
             'title' => 'require',
-            'company_task_id' => 'require',
             'content' => 'require',
-
             'pro_id' => 'require',
             'contract' => 'require',
             'money' => 'require',
@@ -426,12 +424,15 @@ class CompanyTask extends AdminController
                 'contract' => $post['contract'],
                 'money' => $post['money'],
                 'reward' => $post['reward'],
-                'explain' => $post['explain']
+                'explain' => $post['explain'],
+                'contract_id'=>$post['contract_id'],
 
             ];
             $content->save($taskcontent);
             switch ($post['type']) {
                 case "1":
+                    $rule=['company_task_id' => 'require',];
+                    $this->validate($post, $rule);
                     $receive = new TaskReceive();
                     $taskrecive = [
                         'company_task_id' => $post['company_task_id'],
@@ -441,6 +442,8 @@ class CompanyTask extends AdminController
                     $receive->save($taskrecive);
                     break;
                 case "2":
+                    $rule=['card_id' => 'require',];
+                    $this->validate($post, $rule);
                     $people = new TaskPeople();
                     $card_id = explode(',', $post['card_id']);
                     $saveAll = [];
