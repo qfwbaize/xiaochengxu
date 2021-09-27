@@ -72,6 +72,9 @@ class CompanyTask extends AdminController
             if (!empty($task_content)) {
                 $vo['money'] = $task_content['money'];
             }
+            if($vo['type']==1){
+                $vo['is_show']='false';
+            }
             if ($vo['pid'] == 0) {
                 $children = [];
                 foreach ($pid as $v) {
@@ -154,6 +157,9 @@ class CompanyTask extends AdminController
             $company_name = $company->where('company_id', $vo['company_id'])->find();
             if (!empty($company_name)) {
                 $vo['company_name'] = $company_name['company_name'];
+            }
+            if($vo['type']==1){
+                $vo['is_show']='false';
             }
             if ($vo['pid'] == 0) {
                 $children = [];
