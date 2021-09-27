@@ -103,6 +103,7 @@ class MyTask extends AdminController
         $list = $this->model
             ->distinct(true)
             ->where("id IN {$people}")
+            ->page($page, $limit)
             ->select();
 
         foreach ($list as $value){
