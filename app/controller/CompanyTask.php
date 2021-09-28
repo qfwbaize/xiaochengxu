@@ -551,7 +551,7 @@ class CompanyTask extends AdminController
             'task_id|任务id'=>'require',
         ];
         $this->validate($get, $rule);
-        $row = $reward->where('task_id',$get['task_id'])->where('card_id',$get['card_id'])->find();
+        $row = $reward->where('task_id',$get['task_id'])->where('card_id',$get['task_card_id'])->find();
 
         if (!empty($row)) {
 
