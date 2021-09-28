@@ -34,7 +34,7 @@ return [
         'cdphoto' =>[
             'type'=>'local',
             'root'=>app()->getRootPath() . 'public/uploads',
-            'url'        => '/uploads',
+            'url'        => '/',
             'visibility' => 'public',
         ],
 

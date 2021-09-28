@@ -15,9 +15,12 @@ use think\middleware\Throttle;
      * verification 加密验证
      * priority 登陆验证 token验证
      */
-//问题发布接口
+//图片上传功能
 Route::group('apis', function () {
-
+    Route::post('uploads/staff_evidence_upload', 'Uploads/staff_evidence_upload'); //员工证据上传
+    Route::post('uploads/mechanism_evidence_upload', 'Uploads/mechanism_evidence_upload'); //机构证据上传
+    Route::post('uploads/mechanism_contract_upload', 'Uploads/mechanism_contract_upload'); //机构证据上传
+    Route::post('uploads/staff_contract_upload', 'Uploads/staff_contract_upload'); //个人签署合同
 
 
 })->ext();
@@ -36,8 +39,15 @@ Route::group('apis', function () {
     Route::get('companytask/task_people', 'CompanyTask/task_people'); //查看正在工作得员工
     Route::get('companytask/task_people_evidence', 'CompanyTask/task_people_evidence'); //查看员工得证据
     Route::put('companytask/task_people_edit', 'CompanyTask/task_people_edit'); //对员工工作进行审批
+    Route::get('companytask/evidence', 'CompanyTask/evidence'); //查看证据
+    Route::delete('companytask/del', 'CompanyTask/delete'); //机构拒绝任务
+    Route::post('companytask/reward', 'CompanyTask/reward'); //对员工进行奖励
+
     Route::get('mytask/missed', 'MyTask/index'); //查看我的未接任务
     Route::get('mytask/received', 'MyTask/received'); //查看我的未接任务
+    Route::put('mytask/receive_task', 'MyTask/receive_task'); //员工接任务接口
+    Route::post('myTask/evidence', 'MyTask/evidence'); //个人上传证据
+
 
 
 })->ext();

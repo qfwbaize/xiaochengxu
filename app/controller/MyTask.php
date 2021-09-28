@@ -7,6 +7,7 @@ use app\common\controller\AdminController;
 use app\model\Business;
 use app\model\Company;
 use app\model\TaskContent;
+use app\model\TaskEvidence;
 use app\model\TaskPeople;
 use think\App;
 use think\Request;
@@ -133,5 +134,71 @@ class MyTask extends AdminController
 
 
     }
+    /**
+     * 接取任务
+     *
+     * @return \think\Response
+     */
+    public function receive_task($id){
+        $row=$this->model->find($id);
+        empty($row) && $this->error('任务不存在');
+        $card_id=$this->CardId();
+        $company_id=$this->AdminId();
+        $people=new TaskPeople();
+        $people_name=$people->where('task_id',$id)->where('card_id',$card_id)->find();
+        !empty($people_name) && $this->error('你已经领取任务了');
+        $post = $this->request->post();
+        $rule = [
+            'status'=>'in:1'
+        ];
+        $this->validate($post, $rule);
+        try {
+            if($row['type']==4){
+                $rule = [
+                    'contract|合同'=>'require'
+                ];
+                $this->validate($post, $rule);
+                $data=[
+                    'task_id'=>$id,
+                    'card_id'=>$card_id,
+                    'status'=>$post['status'],
+                    'company_id'=>$company_id,
+                    'contract'=>$post['contract']];
+            }else{
+            $data=[
+                'task_id'=>$id,
+                'card_id'=>$card_id,
+                'status'=>$post['status'],
+                'company_id'=>$company_id];}
+            $save = $people->save($data);
+        } catch (\Exception $e) {
+            $this->error('接取失败');
+        }
+        $save ? $this->success('接取成功') : $this->error('接取失败');
+    }
+    /**
+     * 个人证据上传
+     *
+     * @return \think\Response
+     */
+    public function evidence(){
+        $evidence= new TaskEvidence();
+        $post = $this->request->post();
+        $rule = [
+            'task_id|任务id'=>'require',
+            'evidence|证据图片'=>'require',
+            'explain|说明'=>'require',
+            ];
+        $this->validate($post, $rule);
+        try {
+            $post['card_id']=$this->CardId();
+            $save = $evidence->save($post);
+        } catch (\Exception $e) {
+            $this->error('保存失败:'.$e->getMessage());
+        }
+        $save ? $this->success('保存成功') : $this->error('保存失败');
+    }
+
+
 
 }

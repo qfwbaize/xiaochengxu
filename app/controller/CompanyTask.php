@@ -7,6 +7,7 @@ use app\common\controller\AdminController;
 use app\model\Business;
 use app\model\Company;
 use app\model\Cooperation;
+use app\model\Reward;
 use app\model\TaskContent;
 use app\model\TaskEvidence;
 use app\model\TaskPeople;
@@ -86,6 +87,10 @@ class CompanyTask extends AdminController
                         $company_task_name = $company->where('company_id', $v['company_id'])->find();
                         if (!empty($company_name)) {
                             $v['company_name'] = $company_task_name['company_name'];
+                        }
+                        $task_content = $content->where('task_id', $v['id'])->field('money')->find();
+                        if (!empty($task_content)) {
+                            $v['money'] = $task_content['money'];
                         }
                         $v['start_time'] = date('Y-m-d', $v['start_time']);
                         $v['end_time'] = date('Y-m-d', $v['end_time']);
@@ -172,6 +177,10 @@ class CompanyTask extends AdminController
                         $company_task_name = $company->where('company_id', $v['company_id'])->find();
                         if (!empty($company_name)) {
                             $v['company_name'] = $company_task_name['company_name'];
+                        }
+                        $task_content = $content->where('task_id', $v['id'])->field('money')->find();
+                        if (!empty($task_content)) {
+                            $v['money'] = $task_content['money'];
                         }
                         $v['start_time'] = date('Y-m-d', $v['start_time']);
                         $v['end_time'] = date('Y-m-d', $v['end_time']);
@@ -363,10 +372,11 @@ class CompanyTask extends AdminController
             ->buildSql(true);
         $list_id = $company
             ->distinct(true)
-            ->where('status','=','1')
+
             ->whereor("company_id IN {$company_launch}")
             ->whereor("company_id IN {$company_receive}")
             ->select();
+
         $list = [];
 
 
@@ -474,5 +484,53 @@ class CompanyTask extends AdminController
         }
         $save ? $this->success('保存成功') : $this->error('保存失败');
     }
+    /**
+     * 查看证据.
+     *
+     * @return \think\Response
+     */
+    public function evidence($id){
+        list($page, $limit, $where) = $this->buildTableParames();
+        $evidence=new TaskEvidence();
+        $count = $evidence
+            ->where('task_id',$id)
+            ->count();
+        $list = $evidence
+            ->where('task_id',$id)
+            ->page($page, $limit)
+            ->order($this->sort)
+            ->select();
+        $data = [
+            'code'  => 200,
+            'msg'   => '成功',
+            'total' => $count,
+            'data'  => $list,
+        ];
+        return json($data);
+    }
+    /**
+     * 奖励钱.
+     *
+     * @return \think\Response
+     */
+    public function reward(){
+
+        $post = $this->request->post();
+        $rule = [
+            'card_id|员工客户'=>'require',
+            'task_id|任务id'=>'require',
+            'money|金额'=>'require',
+        ];
+        $post['task_card_id']=$this->CardId();
+        $this->validate($post, $rule);
+        try {
+            $reward=new Reward();
+            $save = $reward->save($post);
+        } catch (\Exception $e) {
+            $this->error('保存失败:'.$e->getMessage());
+        }
+        $save ? $this->success('成功') : $this->error('失败');
+    }
+
 
 }
