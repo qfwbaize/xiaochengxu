@@ -6,6 +6,7 @@ namespace app\controller;
 use app\common\controller\AdminController;
 use app\model\Business;
 use app\model\Company;
+use app\model\Reward;
 use app\model\TaskContent;
 use app\model\TaskEvidence;
 use app\model\TaskPeople;
@@ -197,6 +198,32 @@ class MyTask extends AdminController
             $this->error('保存失败:'.$e->getMessage());
         }
         $save ? $this->success('保存成功') : $this->error('保存失败');
+    }
+
+    public function read_reward(){
+        $reward= new Reward();
+        $get = $this->request->get();
+        $rule = [
+
+            'task_id|任务id'=>'require',
+        ];
+        $this->validate($get, $rule);
+        $card_id=$this->CardId();
+
+        $row = $reward->where('task_id',$get['task_id'])->where('task_card_id',$card_id)->find();
+
+        if (!empty($row)) {
+
+            $data = ['code' => 200, 'msg' => '成功', 'data' => $row,];
+
+
+        } else {
+
+            $data = ['code' => 0, 'msg' => '没数据', 'data' => '',];
+
+
+        }
+        return json($data);
     }
 
 

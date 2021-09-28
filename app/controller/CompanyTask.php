@@ -269,14 +269,21 @@ class CompanyTask extends AdminController
      */
     public function task_people_evidence($card_id){
         list($page, $limit, $where) = $this->buildTableParames();
+        $get = $this->request->get();
+        $rule = [
+            'task_id'=>'require'
+        ];
+        $this->validate($get, $rule);
         $taskevidence = new TaskEvidence();
         $count = $taskevidence
             ->where($where)
             ->where('card_id', $card_id)
+            ->where('task_id',$get['task_id'])
             ->count();
         $list = $taskevidence
             ->where($where)
             ->where('card_id', $card_id)
+            ->where('task_id',$get['task_id'])
             ->page($page, $limit)
             ->order($this->sort)
             ->select();
@@ -530,6 +537,34 @@ class CompanyTask extends AdminController
             $this->error('保存失败:'.$e->getMessage());
         }
         $save ? $this->success('成功') : $this->error('失败');
+    }
+    /**
+     * 查看个人打款凭证.
+     *
+     * @return \think\Response
+     */
+    public function read_company_reward(){
+        $reward= new Reward();
+        $get = $this->request->get();
+        $rule = [
+            'card_id|员工客户'=>'require',
+            'task_id|任务id'=>'require',
+        ];
+        $this->validate($get, $rule);
+        $row = $reward->where('task_id',$get['task_id'])->where('card_id',$get['card_id'])->find();
+
+        if (!empty($row)) {
+
+            $data = ['code' => 200, 'msg' => '成功', 'data' => $row,];
+
+
+        } else {
+
+            $data = ['code' => 0, 'msg' => '没数据', 'data' => '',];
+
+
+        }
+        return json($data);
     }
 
 

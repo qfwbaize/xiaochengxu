@@ -42,11 +42,13 @@ Route::group('apis', function () {
     Route::get('companytask/evidence', 'CompanyTask/evidence'); //查看证据
     Route::delete('companytask/del', 'CompanyTask/delete'); //机构拒绝任务
     Route::post('companytask/reward', 'CompanyTask/reward'); //对员工进行奖励
+    Route::get('companytask/read_company_reward', 'CompanyTask/read_company_reward'); //查看打款凭证
 
     Route::get('mytask/missed', 'MyTask/index'); //查看我的未接任务
     Route::get('mytask/received', 'MyTask/received'); //查看我的未接任务
     Route::put('mytask/receive_task', 'MyTask/receive_task'); //员工接任务接口
-    Route::post('myTask/evidence', 'MyTask/evidence'); //个人上传证据
+    Route::post('mytask/evidence', 'MyTask/evidence'); //个人上传证据
+    Route::get('mytask/read_reward', 'MyTask/read_reward'); //个人查看机构打款得凭证
 
 
 
