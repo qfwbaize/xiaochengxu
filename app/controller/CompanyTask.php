@@ -524,7 +524,7 @@ class CompanyTask extends AdminController
 
         $post = $this->request->post();
         $rule = [
-            'card_id|员工客户'=>'require',
+            'task_card_id|员工客户'=>'require',
             'task_id|任务id'=>'require',
             'money|金额'=>'require',
         ];
