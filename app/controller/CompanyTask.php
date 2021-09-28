@@ -524,7 +524,7 @@ class CompanyTask extends AdminController
 
         $post = $this->request->post();
         $rule = [
-            'task_card_id|员工客户'=>'require',
+            'card_id|员工客户'=>'require',
             'task_id|任务id'=>'require',
             'money|金额'=>'require',
         ];
@@ -547,7 +547,7 @@ class CompanyTask extends AdminController
         $reward= new Reward();
         $get = $this->request->get();
         $rule = [
-            'card_id|员工客户'=>'require',
+            'task_card_id|员工客户'=>'require',
             'task_id|任务id'=>'require',
         ];
         $this->validate($get, $rule);
