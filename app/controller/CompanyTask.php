@@ -334,6 +334,8 @@ class CompanyTask extends AdminController
         $row['explain'] = $task_content['explain'];
         $row['start_time'] = date('Y-m-d', $row['start_time']);
         $row['end_time'] = date('Y-m-d', $row['end_time']);
+        $reward=new Reward();
+        $row['dk_money']=$reward->where('task_id',$row['id'])->sum('money');
         $data = ['code' => 200, 'msg' => '成功', 'data' => $row,];
         return json($data);
 
@@ -547,11 +549,11 @@ class CompanyTask extends AdminController
         $reward= new Reward();
         $get = $this->request->get();
         $rule = [
-            'task_card_id|员工客户'=>'require',
+            'card_id|员工客户'=>'require',
             'task_id|任务id'=>'require',
         ];
         $this->validate($get, $rule);
-        $row = $reward->where('task_id',$get['task_id'])->where('card_id',$get['task_card_id'])->find();
+        $row = $reward->where('task_id',$get['task_id'])->where('card_id',$get['card_id'])->find();
 
         if (!empty($row)) {
 
@@ -567,5 +569,43 @@ class CompanyTask extends AdminController
         return json($data);
     }
 
+    /**
+     * 查看个人打款凭证.
+     *
+     * @return \think\Response
+     */
+    public function company_reward(){
+        list($page, $limit, $where) = $this->buildTableParames();
+        $reward= new Reward();
+        $get = $this->request->get();
+        $rule = [
+
+            'task_id|任务id'=>'require',
+        ];
+        $this->validate($get, $rule);
+        $count = $reward
+            ->where('task_id',$get['task_id'])
+            ->where($where)
+            ->count();
+        $list = $reward
+            ->where('task_id',$get['task_id'])
+            ->where($where)
+            ->page($page, $limit)
+            ->order($this->sort)
+            ->select();
+        $business=new Business();
+        foreach ($list as $value){
+            $business_name=$business->where('card_id',$value['card_id'])->find();
+            $value['name']=$business_name['name'];
+            $value['logo']=$business_name['logo'];
+        }
+        $data = [
+            'code'  => 200,
+            'msg'   => '成功',
+            'total' => $count,
+            'data'  => $list,
+        ];
+        return json($data);
+    }
 
 }
