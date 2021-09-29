@@ -316,6 +316,7 @@ class CompanyTask extends AdminController
         $content = new TaskContent();
         $company = new Company();
         $business=new Business();
+        $receive= new TaskReceive();
         $task_content = $content->where('task_id', $row['id'])->find();
         empty($task_content) && $this->error('任务详情丢失');
         $business_name=$business->where('card_id',$row['card_id'])->find();
@@ -323,8 +324,13 @@ class CompanyTask extends AdminController
         if (!empty($company_task_name)) {
             $row['company_name'] = $company_task_name['company_name'];
         }
+        $receive=$receive->where('task_id',$row['task_id'])->find();
+        if(!empty($receive)){
+            $row['company_task_id']=$receive['company_task_id'];
+        }
         $row['name'] = $business_name['name'];
         $row['logo'] = $business_name['logo'];
+        $row['user_id'] = $business_name['user_id'];
         $row['content'] = $task_content['content'];
         $row['num'] = $task_content['num'];
         $row['pro_id'] = $task_content['pro_id'];
@@ -569,7 +575,7 @@ class CompanyTask extends AdminController
     }
 
     /**
-     * 查看个人打款凭证.
+     * 查看所有打款凭证.
      *
      * @return \think\Response
      */
