@@ -53,6 +53,7 @@ Route::group('apis', function () {
     Route::put('mytask/edit_task', 'MyTask/edit_task'); //员工接任务接口
     Route::post('mytask/evidence', 'MyTask/evidence'); //个人上传证据
     Route::get('mytask/read_reward', 'MyTask/read_reward'); //个人查看机构打款得凭证
+    Route::get('mytask/read', 'MyTask/read'); //个人查看任务详情
 
 
 

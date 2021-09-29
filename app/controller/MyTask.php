@@ -10,6 +10,7 @@ use app\model\Reward;
 use app\model\TaskContent;
 use app\model\TaskEvidence;
 use app\model\TaskPeople;
+use app\model\TaskReceive;
 use think\App;
 use think\Request;
 
@@ -133,6 +134,54 @@ class MyTask extends AdminController
         ];
         return json($data);
 
+
+    }
+    /**
+     * 查看任务详情
+     *
+     * @return \think\Response
+     */
+    public function read($id)
+    {
+        $row = $this->model->find($id);
+        empty($row) && $this->error('数据不存在');
+        $content = new TaskContent();
+        $company = new Company();
+        $business=new Business();
+        $receive= new TaskReceive();
+        $people= new TaskPeople();
+        $card_id=$this->CardId();
+        $task_content = $content->where('task_id', $row['id'])->find();
+        empty($task_content) && $this->error('任务详情丢失');
+        $peoples=$people->where('task_id', $row['id'])->where('card_id',$card_id)->find();
+        if(!empty($peoples)){
+            $row['status']=$peoples['status'];
+        }
+        $business_name=$business->where('card_id',$row['card_id'])->find();
+        $company_task_name = $company->where('company_id', $row['company_id'])->find();
+        if (!empty($company_task_name)) {
+            $row['company_name'] = $company_task_name['company_name'];
+        }
+        $receive=$receive->where('task_id',$row['task_id'])->find();
+        if(!empty($receive)){
+            $row['company_task_id']=$receive['company_task_id'];
+        }
+        $row['name'] = $business_name['name'];
+        $row['logo'] = $business_name['logo'];
+        $row['user_id'] = $business_name['user_id'];
+        $row['content'] = $task_content['content'];
+        $row['num'] = $task_content['num'];
+        $row['pro_id'] = $task_content['pro_id'];
+        $row['contract'] = $task_content['contract'];
+        $row['money'] = $task_content['money'];
+        $row['reward'] = $task_content['reward'];
+        $row['explain'] = $task_content['explain'];
+        $row['start_time'] = date('Y-m-d', $row['start_time']);
+        $row['end_time'] = date('Y-m-d', $row['end_time']);
+        $reward=new Reward();
+        $row['dk_money']=$reward->where('task_id',$row['id'])->sum('money');
+        $data = ['code' => 200, 'msg' => '成功', 'data' => $row,];
+        return json($data);
 
     }
     /**
