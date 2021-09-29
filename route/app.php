@@ -48,7 +48,8 @@ Route::group('apis', function () {
 
     Route::get('mytask/missed', 'MyTask/index'); //查看我的未接任务
     Route::get('mytask/received', 'MyTask/received'); //查看我的未接任务
-    Route::put('mytask/receive_task', 'MyTask/receive_task'); //员工接任务接口
+    Route::post('mytask/receive_task', 'MyTask/receive_task'); //员工接任务接口
+    Route::put('mytask/edit_task', 'MyTask/edit_task'); //员工接任务接口
     Route::post('mytask/evidence', 'MyTask/evidence'); //个人上传证据
     Route::get('mytask/read_reward', 'MyTask/read_reward'); //个人查看机构打款得凭证
 

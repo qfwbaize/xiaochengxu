@@ -340,7 +340,6 @@ class CompanyTask extends AdminController
         return json($data);
 
     }
-
     /**
      * 修改任务状态
      *

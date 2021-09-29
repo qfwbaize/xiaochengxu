@@ -199,7 +199,32 @@ class MyTask extends AdminController
         }
         $save ? $this->success('保存成功') : $this->error('保存失败');
     }
-
+    /**
+     * 提交验收
+     *
+     * @return \think\Response
+     */
+    public function edit_task(){
+        $people= new TaskPeople();
+        $post = $this->request->post();
+        $rule = [
+           'task_id'=>'require'
+        ];
+        $this->validate($post, $rule);
+        try {
+            $post['card_id']=$this->CardId();
+            $post['status']=2;
+            $save = $people->where('task_id',$post['task_id'])->where('card_id',$post['card_id'])->save($post);
+        } catch (\Exception $e) {
+            $this->error('失败:'.$e->getMessage());
+        }
+        $save ? $this->success('提交成功') : $this->error('提交失败');
+    }
+    /**
+     * 查看自己得证据
+     *
+     * @return \think\Response
+     */
     public function read_reward(){
         $reward= new Reward();
         $get = $this->request->get();
