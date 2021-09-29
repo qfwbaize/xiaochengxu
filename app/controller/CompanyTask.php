@@ -573,7 +573,34 @@ class CompanyTask extends AdminController
         }
         return json($data);
     }
+    /**
+     * 查看机构打款凭证.
+     *
+     * @return \think\Response
+     */
+    public function read_attor_company_reward(){
+        $reward= new Reward();
+        $get = $this->request->get();
+        $rule = [
+            'company_id|机构'=>'require',
+            'task_id|任务id'=>'require',
+        ];
+        $this->validate($get, $rule);
+        $row = $reward->where('task_id',$get['task_id'])->where('company_id',$get['company_id'])->find();
 
+        if (!empty($row)) {
+
+            $data = ['code' => 200, 'msg' => '成功', 'data' => $row,];
+
+
+        } else {
+
+            $data = ['code' => 0, 'msg' => '没数据', 'data' => '',];
+
+
+        }
+        return json($data);
+    }
     /**
      * 查看所有打款凭证.
      *

@@ -42,7 +42,8 @@ Route::group('apis', function () {
     Route::get('companytask/evidence', 'CompanyTask/evidence'); //查看证据
     Route::delete('companytask/del', 'CompanyTask/delete'); //机构拒绝任务
     Route::post('companytask/reward', 'CompanyTask/reward'); //对员工进行奖励
-    Route::get('companytask/read_company_reward', 'CompanyTask/read_company_reward'); //查看打款凭证
+    Route::get('companytask/read_company_reward', 'CompanyTask/read_company_reward'); //查看机构对个人打款凭证
+    Route::get('companytask/read_attor_company_reward', 'CompanyTask/read_attor_company_reward'); //查看机构对机构打款凭证
     Route::get('companytask/company_reward', 'CompanyTask/company_reward'); //查看所有凭证
 
 
