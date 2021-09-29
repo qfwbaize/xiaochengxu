@@ -153,10 +153,11 @@ class MyTask extends AdminController
         $card_id=$this->CardId();
         $task_content = $content->where('task_id', $row['id'])->find();
         empty($task_content) && $this->error('任务详情丢失');
+        if($row['status']!=4){
         $peoples=$people->where('task_id', $row['id'])->where('card_id',$card_id)->find();
         if(!empty($peoples)){
             $row['status']=$peoples['status'];
-        }
+        }}
         $business_name=$business->where('card_id',$row['card_id'])->find();
         $company_task_name = $company->where('company_id', $row['company_id'])->find();
         if (!empty($company_task_name)) {
