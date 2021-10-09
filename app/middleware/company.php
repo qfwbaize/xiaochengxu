@@ -32,10 +32,12 @@ class company
             return  json($datas);
         }
 
-        if(empty($authentication['status']=='-1')){
+        if($authentication['status']=='-1'){
+
             $datas = ['code' => 0, 'msg' => '您的企业认证失败请重新认证',];
             return  json($datas);
         }
+
         return $next($request);
     }
 }
