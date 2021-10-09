@@ -22,6 +22,7 @@ class users
 
 
         $data=Cache::store('redis')->get("ONE_STAND:USER:login_token:$token");
+
         $authentication=Db::name('user_authentication')->where('users_id',$data['id'])
             ->find();
         if(empty($authentication)){
