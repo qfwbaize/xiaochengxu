@@ -332,5 +332,19 @@ $order_id=[];
         return $data['myCardId'];
 
     }
+    /**
+     * userid
+     * @return \think\response\Json
+     */
+    public function UserId()
+    {
+        $sereact = Request()->header('token');
+
+        $data=Cache::store('redis')->get("ONE_STAND:USER:login_token:$sereact");
+        $data=json_decode($data,true);
+        //dump($data["cid"]);die;
+        return $data['id'];
+
+    }
 
 }

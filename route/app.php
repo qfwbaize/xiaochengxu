@@ -21,15 +21,12 @@ Route::group('apis', function () {
     Route::post('uploads/mechanism_evidence_upload', 'Uploads/mechanism_evidence_upload'); //机构证据上传
     Route::post('uploads/mechanism_contract_upload', 'Uploads/mechanism_contract_upload'); //机构证据上传
     Route::post('uploads/staff_contract_upload', 'Uploads/staff_contract_upload'); //个人签署合同
-
+    Route::get('authentication/read', 'Userauthentication/read'); //查看是否已经备案
+    Route::post('authentication/add', 'Userauthentication/create'); //添加备案信息
 
 })->ext();
+//机构任务模块
 Route::group('apis', function () {
-
-    Route::get('messages/index', 'Messages/index'); //查看消息
-
-    Route::get('messages/read', 'Messages/read'); //阅读消息
-    Route::delete('messages/del', 'Messages/delete'); //消息删除
     Route::post('companytask/add', 'CompanyTask/create'); //发布任务
     Route::get('companytask/release_index', 'CompanyTask/release_index'); //查看发出任务
     Route::get('companytask/accept_index', 'CompanyTask/accept_index'); //查看接受任务
@@ -45,18 +42,21 @@ Route::group('apis', function () {
     Route::get('companytask/read_company_reward', 'CompanyTask/read_company_reward'); //查看机构对个人打款凭证
     Route::get('companytask/read_attor_company_reward', 'CompanyTask/read_attor_company_reward'); //查看机构对机构打款凭证
     Route::get('companytask/company_reward', 'CompanyTask/company_reward'); //查看所有凭证
-
-
+})->middleware(['priority', 'verification','company']);
+//个人任务模块
+Route::group('apis', function () {
     Route::get('mytask/missed', 'MyTask/index'); //查看我的未接任务
-
     Route::get('mytask/received', 'MyTask/received'); //查看我的未接任务
     Route::post('mytask/receive_task', 'MyTask/receive_task'); //员工接任务接口
     Route::put('mytask/edit_task', 'MyTask/edit_task'); //员工接任务接口
     Route::post('mytask/evidence', 'MyTask/evidence'); //个人上传证据
     Route::get('mytask/read_reward', 'MyTask/read_reward'); //个人查看机构打款得凭证
     Route::get('mytask/read', 'MyTask/read'); //个人查看任务详情
+})->middleware(['priority', 'verification','users']);
 
+Route::group('apis', function () {
 
-
-})->ext();
-    //->middleware(['priority', 'verification']);
+    Route::get('messages/index', 'Messages/index'); //查看消息
+    Route::get('messages/read', 'Messages/read'); //阅读消息
+    Route::delete('messages/del', 'Messages/delete'); //消息删除
+})->middleware(['priority', 'verification']);
