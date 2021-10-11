@@ -23,6 +23,7 @@ Route::group('apis', function () {
     Route::post('uploads/staff_contract_upload', 'Uploads/staff_contract_upload'); //个人签署合同
     Route::get('authentication/read', 'Userauthentication/read'); //查看是否已经备案
     Route::post('authentication/add', 'Userauthentication/create'); //添加备案信息
+    Route::post('uploads/authentication', 'Uploads/authentication'); //个人实名上传
 
 })->ext();
 //机构任务模块
